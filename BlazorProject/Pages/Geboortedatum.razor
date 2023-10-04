@@ -1,0 +1,53 @@
+﻿@page "/geboortedatum"
+@inject Models.LocalStorageAccessor LocalStorageAccessor
+@inject NavigationManager NavManager
+
+<div class="container">
+
+    <h3>Opdracht geboortedatum FunFacts</h3>
+
+    <div class="row">
+        <div class="col-md-4">
+
+            <form name="frmLeeftijd">
+                <div class="row ">
+                    <div class="col-auto mb-3">
+                        <label for="geboortedatum">Je geboortedatum</label>
+                        <input @bind="SelectedDate" type="date" id="geboortedatum" min="1970-01-01" max="@maxDate">
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-auto mb-3">
+                        <!--  onclick="storeAndGo()" -->
+                        <button class="btn btn-primary btn-lg  mb-2" id="check" type="button" @onclick="LookupFacts">
+                            Check
+                            FunFacts
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@code {
+    private DateTime? SelectedDate { get; set; }
+    private string maxDate = $"{DateTime.Now.Year}-{DateTime.Now.Month}-";
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.Now.Day < 10) maxDate += $"0{DateTime.Now.Day}";
+        else maxDate += $"{DateTime.Now.Day}";
+    }
+
+    protected async Task LookupFacts()
+    {
+        if (SelectedDate >= new DateTime(1970, 1, 1) && SelectedDate <= DateTime.Now)
+        {
+            await LocalStorageAccessor.SetValueAsync("SelectedDate", SelectedDate);
+            NavManager.NavigateTo("funfacts");
+        }
+    }
+}

@@ -1,0 +1,36 @@
+﻿@page "/funfacts"
+@using System.Globalization;
+@inject Models.LocalStorageAccessor LocalStorageAccess
+
+<div class="container">
+
+    <h3>Opdracht geboortedatum FunFacts</h3>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>@Result1</p>
+            <p>@Result2</p>
+            <p>@Result3</p>
+            <p>@Result4</p>
+
+            <a role="button" href="geboortedatum" class="btn btn-primary btn-lg mb-2" id="back" >Opnieuw</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Result1 { get; set; } = "";
+    private string Result2 { get; set; } = "";
+    private string Result3 { get; set; } = "";
+    private string Result4 { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        string storage = await LocalStorageAccess.GetValueAsync<string>("SelectedDate");
+        if (!DateTime.TryParse(storage, out DateTime geboortedatum)) return;
+        // Result = (MarkupString)$"Vandaag is het {DateTime.Now.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}<br />Je bent geboren op {geboortedatum.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}<br />";
+        Result1 = $"Vandaag is het {DateTime.Now.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}";
+        Result2 = $"Je bent geboren op {geboortedatum.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}";
+
+    }
+}

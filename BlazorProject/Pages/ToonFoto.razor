@@ -1,0 +1,37 @@
+﻿@page "/toonfoto"
+
+<div class="row">
+    <div class="col">
+        <h1>Random Foto</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Random foto
+            </div>
+            <div class="card-body text-center">
+                <img src="./images/@(fotos[x] + ".jpg")" id="foto">
+                <br>
+                <button0 id="btnRandom" class="btn btn-primary mt-2" @onclick="ChangeFoto">Random foto</button0>
+                <div id="logging"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<string> fotos = new List<string>() { "breakfast", "flower", "flower_red", "fontain", "lunch", "sunset" };
+    int x = 0;
+
+    private void ChangeFoto()
+    {
+        Random rnd = new Random();
+        int oldX = x;
+        do
+        {
+            x = rnd.Next(0, fotos.Count);
+        } while (oldX == x);
+    }
+}

@@ -11,6 +11,8 @@ main {
 .sidebar {
     background-image: url('images/banner-902589_1920.jpg');
     background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .top-row {
