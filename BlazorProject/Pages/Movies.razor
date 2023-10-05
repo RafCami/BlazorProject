@@ -1,0 +1,101 @@
+﻿@page "/movies"
+@using BlazorProject.Models;
+@inject HttpClient Http
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Films zoeken (OMDB API)</h1>
+                <div class="form-group m-2">
+                    <label for="zoekterm">Zoekterm</label>
+                    <input type="text"
+                           class="form-control mx-2"
+                           id="zoekterm"
+                           name="zoekterm" @bind=search />
+                </div>
+                <button @onclick=Search id="buttonZoeken" class="btn btn-primary m-2">
+                    Zoeken
+                </button>
+        </div>
+    </div>
+
+    <div class="row m-2">
+        <div class="col-md-12">
+            @if (!string.IsNullOrWhiteSpace(message))
+            {
+                <div class="row p-2 alert alert-@(error ? "danger" : "success")" role="alert">
+                    @message
+                </div>
+            }
+            <div class="row p-3" id="divResult">
+                @if (movies != null && movies.Length > 0)
+                {
+                    foreach (var item in movies)
+                    {
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card mb-3 shadow-sm">
+                                <img src="@item.Poster" class="img-responsive">
+                                <div class="card-body">
+                                    <p class="card-text">@item.Title</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+
+                                        <small class="text-muted">@item.Year</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Movie[] movies;
+    private string search;
+    private string message;
+    private bool error = false;
+
+    protected async Task Search()
+    {
+        Reset();
+        search = search.Trim();
+        if (search.Length < 2 || search.Length > 15)
+        {
+            message = "Zoekterm moet tussen 2 en 15 karakters lang zijn.";
+            error = true;
+            return;
+        }
+
+        var response = await Http.GetAsync($"https://www.omdbapi.com/?s={search}&type=movie&apikey={MyApi.APIKEY}");
+        if (response.IsSuccessStatusCode)
+        {
+            try
+            {
+                var wrapper = await response.Content.ReadFromJsonAsync<MovieWrapper>();
+                if (wrapper.Search == null) movies = new Movie[0];
+                else movies = wrapper.Search;
+                message = $"Aantal gevonden: {movies.Length}";
+                error = false;
+            }
+            catch (Exception ex)
+            {
+                message = $"Error: {ex.Message}";
+                error = true;
+            }
+        }
+        else
+        {
+            message = $"Error status code: {response.StatusCode}";
+            error = true;
+        }
+    }
+
+    protected void Reset()
+    {
+        movies = new Movie[0];
+        message = "";
+        error = false;
+    }
+}
