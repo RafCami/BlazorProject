@@ -1,0 +1,84 @@
+﻿@page "/dobbelen"
+
+<h1>Dobbelsteen spelen</h1>
+
+<div class="container mt-4">
+    <div class="row">
+
+        @for (int i = 1; i < 13; i++)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card text-white @(isWinner[i-1] ? "bg-success" : "bg-secondary")" id="@($"speler{i}")">
+                    <div class="card-body">
+                        <h5 class="card-title">speler @i</h5>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-6 align-self-center text-center">
+            @if (!string.IsNullOrWhiteSpace(result))
+            {
+                <div class="alert alert-info" id="result" role="alert">@result</div>
+            }
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-3 text-center">
+            <p>Voer een getal in (1-12)</p>
+            <input @bind="guessInput" type="number" id="input" class="form-control" min="1" max="12" />
+        </div>
+        <div class="col-3 text-center">
+            <button id="play" type="Button" class="btn btn-primary" @onclick="Play">PLAY</button>
+        </div>
+        <div class="col-3 text-center">
+            <button id="reset" type="Button" class="btn btn-danger" @onclick="Reset">RESET</button>
+        </div>
+    </div>
+</div>
+@code {
+    private bool[] isWinner = new bool[12];
+    private string guessInput = "";
+    private string result = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        ResetArray();
+    }
+
+    private void ResetArray()
+    {
+        for (int i = 0; i < isWinner.Length; i++) {
+            isWinner[i] = false;
+        }
+    }
+
+    private void Reset() {
+        ResetArray();
+        guessInput = "";
+        result = "";
+
+    }
+
+    private void Play()
+    {
+        if (!int.TryParse(guessInput, out int guess) || guess < 1 || guess > 12) return;
+        ResetArray();
+        int winners = 0;
+
+        for (int i = 0; i < isWinner.Length; i++)
+        {
+            if (new Random().Next(1, 7) == 6)
+            {
+                isWinner[i] = true;
+                winners++;
+            }
+        }
+
+        result = $"{winners} speler(s) gooide een 6. {((winners == guess) ? "Gewonnen. Juist" : "Verloren. Fout")} geraden!";
+        
+    }
+}
