@@ -29,8 +29,9 @@
         string storage = await LocalStorageAccess.GetValueAsync<string>("SelectedDate");
         if (!DateTime.TryParse(storage, out DateTime geboortedatum)) return;
         // Result = (MarkupString)$"Vandaag is het {DateTime.Now.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}<br />Je bent geboren op {geboortedatum.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}<br />";
-        Result1 = $"Vandaag is het {DateTime.Now.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}";
-        Result2 = $"Je bent geboren op {geboortedatum.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-NL"))}";
-
+        Result1 = $"Vandaag is het {DateTime.Now.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-BE"))}";
+        Result2 = $"Je bent geboren op {geboortedatum.ToString("dddd dd MMMM yyyy", new CultureInfo("nl-BE"))}";
+        Result3 = $"Je loopt al {Math.Floor((DateTime.Now - geboortedatum).TotalDays)} dagen op deze wereldbol rond.";
+        Result4 = $"Je zal vermoedelijk sterven op {geboortedatum.AddDays((80.3 * 365.25)).ToString("dddd dd MMMM yyyy", new CultureInfo("nl-BE"))}";
     }
 }
