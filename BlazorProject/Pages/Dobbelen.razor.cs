@@ -45,5 +45,26 @@
             result = $"{winners} speler(s) gooide een 6. {((winners == guess) ? "Gewonnen. Juist" : "Verloren. Fout")} geraden!";
 
         }
+        
+        private void PlayToXWinners()
+        {
+            if (!int.TryParse(guessInput, out int guess) || guess < 0 || guess > 12) return;
+            ResetArray();
+            int rolls = 0;
+            int winners = 0;
+
+            do
+            {
+                if (new Random().Next(1, 7) == 6)
+                {
+                    isWinner[winners] = true;
+                    winners++;
+                }
+                rolls++;
+            } while (winners < guess);
+
+            result = $"{winners} speler(s) gooide een 6 na {Math.Ceiling((double)rolls / (double)12)} rondes.";
+
+        }
     }
 }
