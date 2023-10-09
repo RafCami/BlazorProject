@@ -21,7 +21,7 @@ namespace BlazorProject.Pages
                 return;
             }
 
-            var response = await Http.GetAsync($"https://www.omdbapi.com/?s={search}&type=movie&apikey={MyApi.APIKEY}");
+            var response = await Http.GetAsync($"https://www.omdbapi.com/?s={search}&type=movie&apikey=9aa2196e");
             if (response.IsSuccessStatusCode)
             {
                 try
